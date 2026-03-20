@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>✨ Hồ Kiến Quốc | My Profile ✨</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=Fira+Code:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    :root {
+      --bg: #050a10;
+      --surface: #0d1624;
+      --surface2: #162436;
+      --border: rgba(0, 180, 255, 0.18);
+      --accent: #0ea5e9;
+      --accent2: #38bdf8;
+      --accent3: #7dd3fc;
+      --cyan: #06b6d4;
+      --text: #f1f8ff;
+      --muted: #8ba2b5;
+      --glow: rgba(14, 165, 233, 0.4);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Space Grotesk', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* LOADER */
+    #loader {
+      position: fixed; inset: 0; z-index: 9999;
+      background: var(--bg);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 24px;
+      transition: opacity 0.7s ease, visibility 0.7s ease;
+    }
+    #loader.hide { opacity: 0; visibility: hidden; pointer-events: none; }
+    .loader-name {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.2rem, 7vw, 4rem);
+      font-weight: 800; letter-spacing: 0.1em;
+      background: linear-gradient(135deg, var(--accent), var(--cyan));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      animation: pulse-text 1.4s ease-in-out infinite;
+    }
+    @keyframes pulse-text { 0%,100%{opacity:1} 50%{opacity:0.4} }
+    .loader-bar-wrap {
+      width: min(300px, 75vw); height: 3px;
+      background: var(--surface2); border-radius: 99px; overflow: hidden;
+    }
+    .loader-bar {
+      height: 100%; width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--cyan));
+      border-radius: 99px;
+      animation: fill-bar 1.9s ease forwards;
+    }
+    @keyframes fill-bar { to { width: 100%; } }
+    .loader-sub {
+      font-size: 0.76rem; color: var(--muted);
+      font-family: 'Fira Code', monospace; letter-spacing: 0.12em;
+    }
+
+    /* BG */
+    .bg-orbs { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+    .orb { position: absolute; border-radius: 50%; filter: blur(90px); animation: orb-drift 14s ease-in-out infinite; }
+    .orb1 { width: 550px; height: 550px; background: var(--accent); opacity: 0.15; top: -120px; left: -160px; }
+    .orb2 { width: 420px; height: 420px; background: var(--cyan); opacity: 0.12; bottom: -80px; right: -80px; animation-delay: 5s; }
+    .orb3 { width: 280px; height: 280px; background: #3b82f6; opacity: 0.08; top: 45%; left: 55%; animation-delay: 9s; }
+    @keyframes orb-drift {
+      0%,100% { transform: translate(0,0); }
+      33% { transform: translate(25px,-18px); }
+      66% { transform: translate(-18px,25px); }
+    }
+    .grid-bg {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-image: linear-gradient(rgba(14,165,233,0.05) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(14,165,233,0.05) 1px, transparent 1px);
+      background-size: 56px 56px;
+    }
+    #canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+    .scan { position: fixed; left: 0; right: 0; height: 2px; z-index: 1; pointer-events: none;
+      background: linear-gradient(90deg, transparent, rgba(14,165,233,0.35), transparent);
+      animation: scan-move 7s linear infinite; }
+    @keyframes scan-move { from { top: -2px; } to { top: 100vh; } }
+
+    /* PAGE */
+    .page {
+      position: relative; z-index: 10;
+      min-height: 100vh; display: flex; flex-direction: column;
+      align-items: center; padding: 60px 16px 120px; gap: 28px;
+    }
+
+    /* HERO */
+    .hero {
+      width: min(580px, 100%);
+      background: linear-gradient(145deg, rgba(13,22,36,0.97), rgba(19,32,48,0.92));
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 48px 36px 40px;
+      display: flex; flex-direction: column; align-items: center; gap: 18px;
+      backdrop-filter: blur(24px);
+      box-shadow: 0 0 70px rgba(14,165,233,0.1), 0 24px 64px rgba(0,0,0,0.55);
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent), var(--cyan), transparent);
+    }
+
+    .av-wrap { position: relative; width: 128px; height: 128px; }
+    .av-rings { position: absolute; inset: -14px; }
+    .av-ring {
+      position: absolute; inset: 0; border-radius: 50%;
+      border: 1.5px solid transparent;
+    }
+    .av-ring:nth-child(1) { border-color: rgba(14,165,233,0.5); animation: spin 9s linear infinite; }
+    .av-ring:nth-child(2) { inset: 8px; border-color: rgba(6,182,212,0.3); animation: spin 14s linear infinite reverse; }
+    .av-ring:nth-child(3) { inset: 16px; border-color: rgba(125,211,252,0.2); animation: spin 22s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .av-img {
+      width: 128px; height: 128px; border-radius: 50%; object-fit: cover;
+      border: 3px solid var(--accent);
+      box-shadow: 0 0 30px var(--glow), 0 0 60px rgba(14,165,233,0.18);
+    }
+    .av-dot {
+      position: absolute; bottom: 5px; right: 5px;
+      width: 20px; height: 20px; background: #22c55e;
+      border: 3px solid var(--bg); border-radius: 50%;
+      box-shadow: 0 0 10px rgba(34,197,94,0.7);
+    }
+
+    .h-name {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.9rem, 5.5vw, 3rem);
+      font-weight: 800; letter-spacing: 0.05em; text-align: center;
+      background: linear-gradient(135deg, #fff 20%, var(--accent2) 80%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      line-height: 1.05;
+    }
+    .h-code {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.75rem; color: var(--accent3); letter-spacing: 0.16em;
+      text-transform: uppercase; opacity: 0.75;
+    }
+    .h-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(14,165,233,0.1);
+      border: 1px solid rgba(14,165,233,0.3);
+      border-radius: 99px; padding: 6px 20px;
+      font-size: 0.8rem; color: var(--accent3);
+    }
+    .h-dot { color: #22c55e; animation: blink 2s ease-in-out infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    /* CARD */
+    .card {
+      width: min(580px, 100%);
+      background: rgba(13,22,34,0.88);
+      border: 1px solid var(--border);
+      border-radius: 22px; padding: 26px 26px;
+      backdrop-filter: blur(18px);
+      box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+    }
+    .card-hdr {
+      display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
+    }
+    .card-ico {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.9rem; color: white; box-shadow: 0 4px 14px var(--glow);
+    }
+    .card-ttl {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.88rem; font-weight: 700;
+      letter-spacing: 0.14em; text-transform: uppercase;
+    }
+    .card-line { flex: 1; height: 1px; background: linear-gradient(90deg, var(--border), transparent); }
+
+    /* SOCIAL GRID */
+    .s-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; }
+    @media(max-width:460px){ .s-grid { grid-template-columns: 1fr; } }
+
+    .s-item {
+      display: flex; align-items: center; gap: 13px;
+      background: rgba(255,255,255,0.025);
+      border: 1px solid rgba(255,255,255,0.065);
+      border-radius: 15px; padding: 13px 15px;
+      text-decoration: none; color: var(--text);
+      transition: all 0.22s ease; position: relative; overflow: hidden;
+    }
+    .s-item::after {
+      content: ''; position: absolute; inset: 0;
+      background: var(--c, var(--accent)); opacity: 0;
+      transition: opacity 0.22s ease;
+    }
+    .s-item:hover { transform: translateY(-2px); border-color: var(--accent); box-shadow: 0 8px 22px rgba(14,165,233,0.2); }
+    .s-item:hover::after { opacity: 0.07; }
+    .s-ico {
+      width: 42px; height: 42px; border-radius: 11px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem; color: #fff; flex-shrink: 0; position: relative; z-index: 1;
+    }
+    .s-txt { position: relative; z-index: 1; }
+    .s-name { font-weight: 600; font-size: 0.88rem; }
+    .s-desc { font-size: 0.7rem; color: var(--muted); margin-top: 2px; }
+
+    /* MUSIC */
+    .m-inner { display: flex; align-items: center; gap: 16px; }
+    .disc-wrap { position: relative; flex-shrink: 0; }
+    .disc {
+      width: 62px; height: 62px; border-radius: 50%; object-fit: cover;
+      border: 2px solid var(--accent);
+      box-shadow: 0 0 18px var(--glow);
+    }
+    .disc.spin { animation: spin 4s linear infinite; }
+    .disc-hole {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+      width: 15px; height: 15px; background: var(--bg);
+      border-radius: 50%; border: 2px solid var(--accent2);
+    }
+    .m-info { flex: 1; min-width: 0; }
+    .m-title { font-weight: 600; font-size: 0.93rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .m-artist { font-size: 0.73rem; color: var(--muted); margin-top: 2px; }
+    .m-prog { display: flex; align-items: center; gap: 9px; margin-top: 10px; }
+    .prog-bar {
+      flex: 1; height: 3px; background: rgba(255,255,255,0.1);
+      border-radius: 99px; overflow: hidden; cursor: pointer;
+    }
+    .prog-fill {
+      height: 100%; width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--cyan));
+      border-radius: 99px; transition: width 0.5s linear;
+    }
+    .t { font-size: 0.66rem; color: var(--muted); font-family: 'Fira Code', monospace; white-space: nowrap; }
+    .m-ctrls { display: flex; align-items: center; gap: 9px; margin-top: 11px; }
+    .cbtn {
+      width: 34px; height: 34px; border-radius: 50%; border: none; cursor: pointer;
+      background: rgba(14,165,233,0.12); color: var(--accent3);
+      font-size: 0.82rem; display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s ease;
+    }
+    .cbtn:hover { background: var(--accent); color: #fff; transform: scale(1.1); }
+    .cbtn.play {
+      width: 42px; height: 42px; font-size: 0.95rem;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff; box-shadow: 0 4px 16px var(--glow);
+    }
+    .vol-row { display: flex; align-items: center; gap: 9px; margin-top: 9px; }
+    .vol-ico { color: var(--accent); font-size: 0.78rem; }
+    .vol-bar {
+      flex: 1; height: 3px; background: rgba(255,255,255,0.1);
+      border-radius: 99px; overflow: hidden; cursor: pointer;
+    }
+    .vol-fill { height: 100%; width: 80%; background: linear-gradient(90deg, var(--accent), var(--cyan)); border-radius: 99px; }
+    .vol-pct { font-size: 0.66rem; color: var(--muted); font-family: 'Fira Code', monospace; }
+
+    /* FOOTER */
+    .foot { color: var(--muted); font-size: 0.7rem; font-family: 'Fira Code', monospace; letter-spacing: 0.1em; text-align: center; }
+
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
+  </style>
+</head>
+<body>
+
+<div id="loader">
+  <div class="loader-name">NemoSnow</div>
+  <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
+  <div class="loader-sub">Đang load trang ... xin chờ một chút</div>
+</div>
+
+<div class="bg-orbs">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+</div>
+<div class="grid-bg"></div>
+<canvas id="canvas"></canvas>
+<div class="scan"></div>
+
+<div class="page">
+
+  <div class="hero">
+    <div class="av-wrap">
+      <div class="av-rings">
+        <div class="av-ring"></div>
+        <div class="av-ring"></div>
+        <div class="av-ring"></div>
+      </div>
+      <img class="av-img" id="avatarImg"
+        src="https://media.discordapp.net/attachments/1449653162603450492/1456460107427614882/content.png?ex=695871ad&is=6957202d&hm=189702c977b3ff1b915a53a91292ae0e9b03c5d9d3d7664e279c0493d579d84e&=&format=webp&quality=lossless&width=864&height=576"
+        alt="Quốc">
+      <div class="av-dot"></div>
+    </div>
+
+    <div class="h-name">Quốc</div>
+    <div class="h-code">Quốc · My Profile</div>
+    <div class="h-badge"><span class="h-dot">●</span> ONLINE</div>
+  </div>
+
+  <div class="card">
+    <div class="card-hdr">
+      <div class="card-ico"><i class="fas fa-rocket"></i></div>
+      <div class="card-ttl">Social Cosmos</div>
+      <div class="card-line"></div>
+    </div>
+    <div class="s-grid">
+      <a href="https://www.facebook.com/phanhdiahuong?locale=vi_VN" target="_blank" class="s-item" style="--c:#1877f2">
+        <div class="s-ico" style="background:#1877f2"><i class="fab fa-facebook-f"></i></div>
+        <div class="s-txt"><div class="s-name">Facebook</div><div class="s-desc">Connect &amp; Share</div></div>
+      </a>
+      <a href="https://discord.gg/6AW65SFS5m" target="_blank" class="s-item" style="--c:#5865f2">
+        <div class="s-ico" style="background:#5865f2"><i class="fab fa-discord"></i></div>
+        <div class="s-txt"><div class="s-name">Discord</div><div class="s-desc">Gaming &amp; Community</div></div>
+      </a>
+      <a href="https://www.tiktok.com/@hkq407" target="_blank" class="s-item" style="--c:#00f2ea">
+        <div class="s-ico" style="background:#111"><i class="fab fa-tiktok"></i></div>
+        <div class="s-txt"><div class="s-name">TikTok</div><div class="s-desc">Creative Content</div></div>
+      </a>
+      <a href="https://youtube.com" target="_blank" class="s-item" style="--c:#ff0000">
+        <div class="s-ico" style="background:#ff0000"><i class="fab fa-youtube"></i></div>
+        <div class="s-txt"><div class="s-name">YouTube</div><div class="s-desc"> NO  &amp; Content</div></div>
+      </a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hdr">
+      <div class="card-ico" style="background:linear-gradient(135deg, var(--accent), var(--cyan))"><i class="fas fa-music"></i></div>
+      <div class="card-ttl">Now Playing</div>
+      <div class="card-line"></div>
+    </div>
+
+    <div class="m-inner">
+      <div class="disc-wrap">
+        <img class="disc" id="disc" src="https://i.imgur.com/DpS94e8.jpeg" alt="cover">
+        <div class="disc-hole"></div>
+      </div>
+      <div class="m-info">
+        <div class="m-title">🎵 Hạt Mưa Vương Vấn </div>
+        <div class="m-artist">I love Jesus ❤️</div>
+      </div>
+    </div>
+
+    <div class="m-prog">
+      <span class="t" id="tCur">0:00</span>
+      <div class="prog-bar" id="progBar"><div class="prog-fill" id="progFill"></div></div>
+      <span class="t" id="tTot">0:00</span>
+    </div>
+
+    <div class="m-ctrls">
+      <button class="cbtn"><i class="fas fa-backward-step"></i></button>
+      <button class="cbtn play" id="playBtn"><i class="fas fa-play" id="playIco"></i></button>
+      <button class="cbtn"><i class="fas fa-forward-step"></i></button>
+    </div>
+
+    <div class="vol-row">
+      <i class="fas fa-volume-up vol-ico"></i>
+      <div class="vol-bar" id="volBar"><div class="vol-fill" id="volFill"></div></div>
+      <span class="vol-pct" id="volPct">80%</span>
+    </div>
+
+    <!-- QUAN TRỌNG: preload="none" để tránh loader bị treo -->
+    <audio id="audio" preload="none">
+      <source src="https://cdn.discordapp.com/attachments/1468209685684555981/1484509479922831420/Hat_Mua_Vuong_Van_Haiyang_Remix_-_AIR_Cover_Hat_Mua_Vuong_Van_Em_Gio_Nay_ang_Noi_au_Remix.mp3?ex=69be7cb0&is=69bd2b30&hm=42d7b3e7c71f6256c122f75324da7f1048389060695711ca7e489da5cabe7a58&" type="audio/mpeg">
+    </audio>
+  </div>
+
+  <div class="foot">© 2026 NemoSnow · All rights reserved</div>
+</div>
+
+<script>
+// ===== FIX LOADER =====
+// Dùng setTimeout cố định thay vì chờ window.load
+// Tránh bị treo khi ảnh/audio từ CDN ngoài load chậm hoặc bị lỗi
+setTimeout(function() {
+  document.getElementById('loader').classList.add('hide');
+}, 2200);
+
+// Fallback: nếu window.load xảy ra sớm hơn thì ẩn loader ngay
+window.addEventListener('load', function() {
+  setTimeout(function() {
+    document.getElementById('loader').classList.add('hide');
+  }, 500);
+});
+
+// Xử lý lỗi avatar - dùng ảnh dự phòng
+var avatarImg = document.getElementById('avatarImg');
+avatarImg.onerror = function() {
+  this.src = 'https://media.discordapp.net/attachments/1459036268489998336/1484131646243606568/hacker.png?ex=69bd1cce&is=69bbcb4e&hm=785508ce066131bda820688899db006743267ae99f330a978aa2b4a9d6f843c8&=&format=webp&quality=lossless&width=350&height=350';
+  this.onerror = function() {
+    // Nếu cả ảnh dự phòng cũng lỗi, tạo placeholder
+    this.style.background = 'linear-gradient(135deg, #0ea5e9, #06b6d4)';
+    this.src = 'https://cdn.discordapp.com/attachments/1378041828984754232/1483443487339708508/Screenshot_20260317_193238_TikTok.jpg?ex=69bde7a8&is=69bc9628&hm=0846205d1619c370f252a4e2c5c1e5f2fca9fdcbf2019a6a6e63592c37d9e3dc&';
+  };
+};
+
+/* PARTICLES */
+const cv = document.getElementById('canvas');
+const cx = cv.getContext('2d');
+let W, H, pts = [];
+function resize() { W = cv.width = innerWidth; H = cv.height = innerHeight; }
+resize(); window.addEventListener('resize', resize);
+for (let i = 0; i < 85; i++) pts.push({
+  x: Math.random()*innerWidth, y: Math.random()*innerHeight,
+  r: Math.random()*1.4+0.3,
+  dx: (Math.random()-0.5)*0.28, dy: (Math.random()-0.5)*0.28,
+  a: Math.random()*0.45+0.08
+});
+(function draw() {
+  cx.clearRect(0,0,W,H);
+  pts.forEach(p => {
+    cx.beginPath(); cx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+    cx.fillStyle = `rgba(14, 165, 233, ${p.a})`; cx.fill();
+    p.x += p.dx; p.y += p.dy;
+    if (p.x<0||p.x>W) p.dx*=-1;
+    if (p.y<0||p.y>H) p.dy*=-1;
+  });
+  requestAnimationFrame(draw);
+})();
+
+/* MUSIC */
+const audio = document.getElementById('audio');
+const playBtn = document.getElementById('playBtn');
+const playIco = document.getElementById('playIco');
+const disc = document.getElementById('disc');
+const progFill = document.getElementById('progFill');
+const progBar = document.getElementById('progBar');
+const tCur = document.getElementById('tCur');
+const tTot = document.getElementById('tTot');
+const volBar = document.getElementById('volBar');
+const volFill = document.getElementById('volFill');
+const volPct = document.getElementById('volPct');
+audio.volume = 0.8;
+let playing = false;
+
+function fmt(s) {
+  const m = Math.floor(s/60), sec = Math.floor(s%60);
+  return `${m}:${sec.toString().padStart(2,'0')}`;
+}
+playBtn.addEventListener('click', () => {
+  if (playing) {
+    audio.pause();
+    playIco.className = 'fas fa-play';
+    disc.classList.remove('spin');
+  } else {
+    audio.play().catch(() => {});
+    playIco.className = 'fas fa-pause';
+    disc.classList.add('spin');
+  }
+  playing = !playing;
+});
+audio.addEventListener('timeupdate', () => {
+  if (!audio.duration) return;
+  progFill.style.width = (audio.currentTime / audio.duration * 100) + '%';
+  tCur.textContent = fmt(audio.currentTime);
+  tTot.textContent = fmt(audio.duration);
+});
+audio.addEventListener('ended', () => {
+  playing = false;
+  playIco.className = 'fas fa-play';
+  disc.classList.remove('spin');
+  progFill.style.width = '0%';
+  tCur.textContent = '0:00';
+});
+progBar.addEventListener('click', e => {
+  if (!audio.duration) return;
+  const r = progBar.getBoundingClientRect();
+  audio.currentTime = ((e.clientX - r.left) / r.width) * audio.duration;
+});
+volBar.addEventListener('click', e => {
+  const r = volBar.getBoundingClientRect();
+  const v = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width));
+  audio.volume = v;
+  volFill.style.width = (v * 100) + '%';
+  volPct.textContent = Math.round(v * 100) + '%';
+});
+</script>
+</body>
+</html>
